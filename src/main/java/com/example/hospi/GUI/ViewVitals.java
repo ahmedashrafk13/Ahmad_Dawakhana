@@ -135,8 +135,12 @@ public class ViewVitals extends Application {
      * Loads patients assigned to the current doctor into the dropdown
      */
     private void loadAssignedPatients() {
-        String sql = "SELECT p.id, p.name FROM doctorpatientassignment dpa " +
-                "JOIN patients p ON dpa.PatientID = p.id WHERE dpa.DoctorID = ?";
+        String sql ="""
+                SELECT DISTINCT p.id, p.name 
+                FROM hospital_db.doctorpatientassignment dpa
+                JOIN hospital_db.patients p ON dpa.PatientID = p.id
+                WHERE dpa.DoctorID = ?
+                """;
 
         try (Connection conn = DatabaseConnection.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
