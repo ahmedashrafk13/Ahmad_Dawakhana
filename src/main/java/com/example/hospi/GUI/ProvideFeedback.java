@@ -207,8 +207,12 @@ public class ProvideFeedback extends Application {
      */
     private void loadPatientList() {
         // SQL query to get all patients assigned to this doctor
-        String query = "SELECT p.id, p.name FROM patients p " +
-                "JOIN doctorpatientassignment dpa ON p.id = dpa.PatientID WHERE dpa.DoctorID = ?";
+        String query ="""
+                SELECT DISTINCT p.id, p.name 
+                FROM hospital_db.doctorpatientassignment dpa
+                JOIN hospital_db.patients p ON dpa.PatientID = p.id
+                WHERE dpa.DoctorID = ?
+                """;
 
         try (Connection conn = DatabaseConnection.getConnection();
              PreparedStatement stmt = conn.prepareStatement(query)) {
