@@ -260,11 +260,11 @@ public class PrescribeMedicine extends Application {
      */
     private void loadPatientsFromDatabase(int doctorId) {
         // SQL query to fetch patients assigned to this doctor
-        String query = """
-                    SELECT patients.id AS patient_id, patients.name AS patient_name
-                    FROM hospital_db.doctorpatientassignment AS dpa
-                    INNER JOIN hospital_db.patients AS patients ON dpa.PatientID = patients.id
-                    WHERE dpa.DoctorID = ?
+        String query ="""
+                SELECT DISTINCT p.id, p.name 
+                FROM hospital_db.doctorpatientassignment dpa
+                JOIN hospital_db.patients p ON dpa.PatientID = p.id
+                WHERE dpa.DoctorID = ?
                 """;
 
         try (Connection conn = DatabaseConnection.getConnection();
