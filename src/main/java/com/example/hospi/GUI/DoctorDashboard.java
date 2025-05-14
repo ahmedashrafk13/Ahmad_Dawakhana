@@ -398,7 +398,12 @@ public class DoctorDashboard extends Application {
     private List<String> getAssignedPatients(int doctorId) {
         List<String> list = new ArrayList<>();
         try (Connection con = DatabaseConnection.getConnection()) {
-            String sql = "SELECT p.name FROM hospital_db.patients p JOIN hospital_db.doctorpatientassignment d ON p.id = d.PatientID WHERE d.DoctorID = ?";
+            String sql = """
+                SELECT DISTINCT p.id, p.name 
+                FROM hospital_db.doctorpatientassignment dpa
+                JOIN hospital_db.patients p ON dpa.PatientID = p.id
+                WHERE dpa.DoctorID = ?
+                """;
             try (PreparedStatement stmt = con.prepareStatement(sql)) {
                 stmt.setInt(1, doctorId);
                 ResultSet rs = stmt.executeQuery();
